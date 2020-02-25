@@ -14,15 +14,15 @@ $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
 
 # define some variables
-$temp="c:\TempCommentaries\TempGMILSetup-yFH4gu"
+$temp="c:\TempCommentaries\TempCommentariesSetup-yFH4gu"
 $npm="npm-1.4.12.zip"
 $config="c:\Program Files\Qlik\Sense\ServiceDispatcher"
-$target="$config\Node\GlobalMasterItems-Server"
+$target="$config\Node\Commentaries-Server"
 
 # check if module is installed
 if(!(Test-Path -Path "$target\node_modules")) {
 
-    $confirm = Read-Host "This script will install GlobalMasterItems-Server for GlobalMasterItems-Library Qlik Sense Extension, do you want to proceed? [Y/n]"
+    $confirm = Read-Host "This script will install Commentaries-Server for Commentaries Qlik Sense Extension, do you want to proceed? [Y/n]"
     if ($confirm -eq 'n') {
       Break
     }
@@ -36,10 +36,10 @@ if(!(Test-Path -Path "$target\node_modules")) {
     # check if module has been downloaded
     if(!(Test-Path -Path "$target\routes")) {
         New-Item -Path "$target\routes" -Type directory | Out-Null
-        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/index.js" -OutFile "$target\index.js"
-        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/db.js" -OutFile "$target\db.js"
-        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/routes/index.js" -OutFile "$target\routes\index.js"
-        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/package.json" -OutFile "$target\package.json"
+        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/index.js" -OutFile "$target\index.js"
+        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/db.js" -OutFile "$target\db.js"
+        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/routes/index.js" -OutFile "$target\routes\index.js"
+        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/package.json" -OutFile "$target\package.json"
     }
 
     # check if npm has been unzipped already
