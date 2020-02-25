@@ -14,15 +14,15 @@ $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
 
 # define some variables
-$temp="c:\TempCommentaries\TempCommentariesSetup-yFH4gu"
+$temp="c:\TempGMIL\TempGMILSetup-yFH4gu"
 $npm="npm-1.4.12.zip"
 $config="c:\Program Files\Qlik\Sense\ServiceDispatcher"
-$target="$config\Node\Commentaries-Server"
+$target="$config\Node\GlobalMasterItems-Server"
 
 # check if module is installed
 if(!(Test-Path -Path "$target\node_modules")) {
 
-    $confirm = Read-Host "This script will install Commentaries-Server for Commentaries Qlik Sense Extension, do you want to proceed? [Y/n]"
+    $confirm = Read-Host "This script will install GlobalMasterItems-Server for GlobalMasterItems-Library Qlik Sense Extension, do you want to proceed? [Y/n]"
     if ($confirm -eq 'n') {
       Break
     }
@@ -36,10 +36,10 @@ if(!(Test-Path -Path "$target\node_modules")) {
     # check if module has been downloaded
     if(!(Test-Path -Path "$target\routes")) {
         New-Item -Path "$target\routes" -Type directory | Out-Null
-        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/index.js" -OutFile "$target\index.js"
-        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/db.js" -OutFile "$target\db.js"
-        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/routes/index.js" -OutFile "$target\routes\index.js"
-        Invoke-WebRequest "http://raw.githubusercontent.com/mjromper/commentaries-qliksense-server/master/package.json" -OutFile "$target\package.json"
+        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/index.js" -OutFile "$target\index.js"
+        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/db.js" -OutFile "$target\db.js"
+        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/routes/index.js" -OutFile "$target\routes\index.js"
+        Invoke-WebRequest "http://raw.githubusercontent.com/iviasensio/GlobalMasterItems-Server/master/package.json" -OutFile "$target\package.json"
     }
 
     # check if npm has been unzipped already
@@ -65,22 +65,22 @@ if(!(Test-Path -Path "$target\node_modules")) {
 function Read-Default($text, $defaultValue) { $prompt = Read-Host "$($text) [$($defaultValue)]"; return ($defaultValue,$prompt)[[bool]$prompt]; }
 
 # check if config has been added already
-if (!(Select-String -path "$config\services.conf" -pattern "Identity=aor-commentaries-server" -quiet)) {
+if (!(Select-String -path "$config\services.conf" -pattern "Identity=aor-globalmasteritems-server" -quiet)) {
 
 	$settings = @"
 
 
-[commentaries-server]
-Identity=aor-commentaries-server
+[globalmasteritems-server]
+Identity=aor-globalmasteritems-server
 Enabled=true
-DisplayName=Commentaries Server
+DisplayName=GlobalMasterItems Server
 ExecType=nodejs
 ExePath=Node\node.exe
-Script=Node\commentaries-server\index.js
+Script=Node\globalmasteritems-server\index.js
 
-[commentaries-server.parameters]
+[globalmasteritems-server.parameters]
 auth_port=
-comments_port_unsecure=
+globalmasteritems_port_unsecure=
 "@
 	Add-Content "$config\services.conf" $settings
 }
@@ -90,7 +90,7 @@ Write-Host $nl"CONFIGURE MODULE"
 Write-Host $nl"To make changes to the configuration in the future just re-run this script."
 
 $auth_port=Read-Default $nl"Enter HTTPS port" "8200"
-$comments_port_unsecure=Read-Default $nl"Enter HTTP port" "8202"
+$globalmasteritems_port_unsecure=Read-Default $nl"Enter HTTP port" "8202"
 
 function Set-Config( $file, $key, $value )
 {
@@ -106,7 +106,7 @@ function Set-Config( $file, $key, $value )
 # write changes to configuration file
 Write-Host $nl"Updating configuration..."
 Set-Config -file "$config\services.conf" -key "auth_port" -value $auth_port
-Set-Config -file "$config\services.conf" -key "comments_port_unsecure" -value $comments_port_unsecure
+Set-Config -file "$config\services.conf" -key "globalmasteritems_port_unsecure" -value $globalmasteritems_port_unsecure
 
 # Restart ServiceDipatcher
 Write-Host $nl"Restarting ServiceDispatcher.."
@@ -115,4 +115,4 @@ start-sleep 5
 net start QlikSenseServiceDispatcher
 Write-Host $nl"'Qlik Sense Service Dispatcher' restarted."$nl
 
-Write-Host $nl"Done! Commentaries write-back module installed."$nl
+Write-Host $nl"Done! GlobalMasterItems write-back module installed."$nl
